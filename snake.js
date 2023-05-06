@@ -15,6 +15,13 @@ let food = { x: 250, y: 250 };
 // Set the initial score
 let score = 0;
 
+// Set the initial position of the obstacles
+let obstacles = [
+    { x: 100, y: 100 },
+    { x: 200, y: 200 },
+    { x: 300, y: 300 }
+];
+
 // Handle keyboard input to change the direction of the snake
 document.addEventListener("keydown", (event) => {
     if (event.code === "ArrowLeft" && dx === 0) {
@@ -38,7 +45,7 @@ function gameLoop() {
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
     snake.unshift(head);
 
-    // Check if the snake has collided with the walls or itself
+    // Check if the snake has collided with the walls, itself, or an obstacle
     if (head.x < 0) {
         head.x = canvas.width - segmentSize;
     } else if (head.x >= canvas.width) {
@@ -48,6 +55,9 @@ function gameLoop() {
     } else if (head.y >= canvas.height) {
         head.y = 0;
     } else if (snake.slice(1).some(segment => segment.x === head.x && segment.y === head.y)) {
+        alert(`Game over! Your score is ${score}`);
+        location.reload();
+    } else if (obstacles.some(obstacle => obstacle.x === head.x && obstacle.y === head.y)) {
         alert(`Game over! Your score is ${score}`);
         location.reload();
     }
@@ -73,6 +83,10 @@ function gameLoop() {
     });
     ctx.fillStyle = "#f44336"; // red color for food
     ctx.fillRect(food.x, food.y, segmentSize, segmentSize);
+    ctx.fillStyle = "#9E9E9E"; // gray color for obstacles
+    obstacles.forEach((obstacle) => {
+        ctx.fillRect(obstacle.x, obstacle.y, segmentSize, segmentSize);
+    });
 
     // Update the score
     document.getElementById("score").textContent = `Score: ${score}`;
