@@ -16,11 +16,13 @@ let food = { x: 250, y: 250 };
 let score = 0;
 
 // Set the initial position of the obstacles
-let obstacles = [
-    { x: 100, y: 100 },
-    { x: 200, y: 200 },
-    { x: 300, y: 300 }
-];
+let obstacles = [];
+for (let i = 0; i < 5; i++) {
+    obstacles.push({
+        x: Math.floor(Math.random() * canvas.width / segmentSize) * segmentSize,
+        y: Math.floor(Math.random() * canvas.height / segmentSize) * segmentSize
+    });
+}
 
 // Handle keyboard input to change the direction of the snake
 document.addEventListener("keydown", (event) => {
@@ -38,6 +40,14 @@ document.addEventListener("keydown", (event) => {
         dy = segmentSize;
     }
 });
+
+// Set the size of the canvas based on the size of the device's screen
+function setCanvasSize() {
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    canvas.width = Math.floor(screenWidth / segmentSize) * segmentSize;
+    canvas.height = Math.floor(screenHeight / segmentSize) * segmentSize;
+}
 
 // Main game loop
 function gameLoop() {
@@ -94,6 +104,10 @@ function gameLoop() {
     // Call the game loop again
     setTimeout(gameLoop, 100);
 }
+
+// Set the size of the canvas when the page loads and when the window is resized
+setCanvasSize();
+window.addEventListener("resize", setCanvasSize);
 
 // Start the game loop
 gameLoop();
